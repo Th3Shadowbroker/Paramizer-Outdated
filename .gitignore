@@ -1,0 +1,7 @@
+/.idea/
+/target/
+*.iml
+
+/src/main/java/io/m4taiori/paramizer/enums/
+/src/main/java/io/m4taiori/paramizer/exceptions/
+/src/main/java/io/m4taiori/paramizer/util/
