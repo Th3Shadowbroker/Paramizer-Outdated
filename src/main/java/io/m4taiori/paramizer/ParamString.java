@@ -1,5 +1,8 @@
 package io.m4taiori.paramizer;
 
+import io.m4taiori.paramizer.exceptions.ParamException;
+import io.m4taiori.paramizer.validation.ParamValidator;
+
 import java.util.*;
 
 /**
@@ -27,6 +30,11 @@ public class ParamString
      * Contains flags.
      */
     private final List<String> flags = new ArrayList<>();
+
+    /**
+     * The validator for this param-string.
+     */
+    private ParamValidator validator;
 
     /**
      * Constructor of {@link ParamString}.
@@ -152,10 +160,54 @@ public class ParamString
         return valueFlags.get(value);
     }
 
+    /**
+     * Set the validator used to validate this {@link ParamString}
+     * @param validator The {@link ParamValidator} used to validate this {@link ParamString}.
+     */
+    public void setValidator( ParamValidator validator )
+    {
+        this.validator = validator;
+    }
+
+    /**
+     * Get the assigned validator.
+     * @return ParamValidator
+     */
+    public ParamValidator getValidator()
+    {
+        return validator;
+    }
+
     @Override
     public String toString()
     {
         return raw;
+    }
+
+    /**
+     * Validates this {@Link ParamString} with the assigned {@link ParamValidator}
+     * @throws ParamException Thrown if the validation failed.
+     */
+    public void validate() throws ParamException
+    {
+        if ( validator != null ) validator.validate(this);
+    }
+
+    /**
+     * Performs silent validation.
+     * @return True if validation succeeded.
+     */
+    public boolean validateSilently()
+    {
+        try
+        {
+            validate();
+            return true;
+        }
+        catch ( ParamException ex )
+        {
+            return false;
+        }
     }
 
     /**

@@ -1,4 +1,7 @@
 import io.m4taiori.paramizer.ParamString;
+import io.m4taiori.paramizer.exceptions.ParamException;
+import io.m4taiori.paramizer.validation.ParamValidator;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -26,6 +29,34 @@ public class ParamizerTest
             System.out.println("\t" + s);
         }
 
+        System.out.println( "\nStarting testing of the ParamValidator class..." );
+
+        pstring.setValidator
+                (
+                        new ParamValidator()
+                            .requireFlag("flag")
+                            .requireValueFlag("help")
+                );
+
+
+        System.out.println( "Silent validation: " + (pstring.validateSilently() ? "Validation successful!" : "Validation failed!" ));
+        Assert.assertTrue(pstring.validateSilently());
+
+        System.out.println( "\nExpecting error for required flag \"aflag\" and a minimal amount of 3 unassigned parameters." );
+
+        pstring.setValidator
+                (
+                        new ParamValidator()
+                                .requireFlag( "aflag" )
+                                .minimalUnassigend(3)
+                );
+
+        try
+        {
+            pstring.validate();
+        } catch (Exception ex) {
+            Assert.assertTrue( ex instanceof  ParamException && ((ParamException) ex).getMinimalUnassignedParameters() > pstring.getUnassignedValues().length );
+        }
 
     }
 
